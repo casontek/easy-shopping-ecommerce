@@ -14,6 +14,6 @@ interface OrderDao {
     suspend fun orderProduct(order: OrderHistory)
 
     @Query("SELECT * FROM OrderHistory WHERE userId =:userId")
-    suspend fun userOrders(userId: String) : Flow<OrderHistory>
+    fun userOrders(userId: String) : Flow<List<OrderHistory>>
 
 }

@@ -114,6 +114,9 @@ class MainViewModel @Inject constructor(
             cartDao.getCartsWithProducts(userId).collect { carts ->
                 updateState(_state.value.copy(carts = carts))
             }
+            orderDao.userOrders(userId).collect {
+                updateState(_state.value.copy(orderHistory = it))
+            }
         }
     }
 
