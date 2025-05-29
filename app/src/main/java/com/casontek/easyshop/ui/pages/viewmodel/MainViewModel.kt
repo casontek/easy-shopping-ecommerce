@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
@@ -121,13 +122,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun placeOrder() = viewModelScope.launch {
-        val format = SimpleDateFormat("ddMMyy", Locale.US)
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US)
+        val formatted = LocalDate.now().format(formatter)
+
         state.value.carts.forEach {
             val order = OrderHistory(
                 productId = it.productId,
                 userId = state.value.userId,
                 title = it.title,
-                date = format.format(LocalDate.now()),
+                date = formatted,
                 quantity = it.quantity,
                 price = it.price,
                 image = it.images.first()
