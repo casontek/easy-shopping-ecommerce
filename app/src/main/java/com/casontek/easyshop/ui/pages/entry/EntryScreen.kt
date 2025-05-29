@@ -76,8 +76,8 @@ fun EntryScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.mipmap.agroshop_logo),
-                    contentDescription = "AgroShop logo"
+                    painter = painterResource(id = R.mipmap.app_logo),
+                    contentDescription = "EasyShop logo"
                 )
             }
 
