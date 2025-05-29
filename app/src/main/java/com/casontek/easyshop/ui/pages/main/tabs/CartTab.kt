@@ -146,11 +146,9 @@ fun CartTab(
                         interactionSource = source,
                         indication = null
                     ) {
-                        Toast.makeText(
-                            context,
-                            "Orders currently not available!",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        //place order
+                        viewModel.placeOrder()
+                        Toast.makeText(context, "Your Orders has been placed.", Toast.LENGTH_LONG).show()
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {

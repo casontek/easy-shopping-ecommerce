@@ -45,6 +45,10 @@ object DatabaseModule {
 
     @Provides
     @Singleton
+    fun providesOrderDao(database: AgroDatabase) = database.orderDao()
+
+    @Provides
+    @Singleton
     fun providesProductRepository(
         productDao: ProductDao,
         reviewDao: ReviewDao,

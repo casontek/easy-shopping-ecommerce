@@ -5,19 +5,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amplifyframework.core.Amplify
 import com.casontek.easyshop.data.local.dao.CartDao
+import com.casontek.easyshop.data.local.dao.OrderDao
 import com.casontek.easyshop.data.local.dao.ProductDao
+import com.casontek.easyshop.data.local.entity.OrderHistory
+import com.casontek.easyshop.data.local.model.ProductCart
 import com.casontek.easyshop.ui.pages.main.MainState
 import com.casontek.easyshop.utils.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val productDao: ProductDao,
-    private val cartDao: CartDao
+    private val cartDao: CartDao,
+    private val orderDao: OrderDao
 ): ViewModel() {
     private val _state = MutableStateFlow<MainState>(MainState())
     val state: StateFlow<MainState> = _state
@@ -107,6 +114,25 @@ class MainViewModel @Inject constructor(
             cartDao.getCartsWithProducts(userId).collect { carts ->
                 updateState(_state.value.copy(carts = carts))
             }
+        }
+    }
+
+    fun placeOrder() = viewModelScope.launch {
+        val format = SimpleDateFormat("ddMMyy", Locale.US)
+        state.value.carts.forEach {
+            val order = OrderHistory(
+                productId = it.productId,
+                userId = state.value.userId,
+                title = it.title,
+                date = format.format(LocalDate.now()),
+                quantity = it.quantity,
+                price = it.price,
+                image = it.images.first()
+            )
+
+            //create order
+            orderDao.orderProduct(order)
+            deleteCartItem(it.cartId)
         }
     }
 
